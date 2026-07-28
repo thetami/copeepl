@@ -84,7 +84,7 @@ export default function Home() {
     <main className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-[#0b2942] px-6 py-24 text-white">
       <div className="relative flex flex-col items-center gap-8 text-center">
         <h1 className="text-5xl font-semibold tracking-tight text-white sm:text-6xl">
-          Coming soon
+          Coming (as) soon (as parent life allows)
         </h1>
         <div className="h-40 w-40 sm:h-48 sm:w-48">
           <ConstructionMark />
