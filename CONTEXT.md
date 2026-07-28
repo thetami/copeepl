@@ -13,11 +13,11 @@ that genuinely support family life.
 
 ## Current Status
 
-Fresh Next.js install — nothing built yet.
+Next.js + Supabase connected. Ready to build database schema.
 
 ## Next Task
 
-Set up Supabase project and connect to this Next.js app.
+Create database schema in Supabase for the Copeepl platform.
 
 ## Key Features to Build
 
