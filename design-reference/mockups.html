@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Copeepl — Design Reference (approved mockups)</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --azure: #192a37; --azure-mid: #243d50; --azure-light: #2e5068;
+    --teal: #3fc1a5; --teal-light: #6dd4bc; --teal-pale: #e6f8f4;
+    --crimson: #e84a7e; --crimson-pale: #fdeef4;
+    --warm: #f8f5f1; --warm-mid: #eee9e2;
+    --ink: #192a37; --ink-mid: #4a6070; --ink-light: #7a95a6;
+    --low: #7a95a6; --low-pale: #eef3f6;
+    --white: #ffffff;
+    --serif: 'DM Serif Display', serif; --sans: 'Inter', sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: var(--sans); background: var(--warm); color: var(--ink); }
+  .page-label { font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--teal); padding: 20px 20px 10px; }
+  .screen { background: var(--white); border: 1px solid var(--warm-mid); margin: 0 20px 40px; border-radius: 16px; overflow: hidden; }
+
+  .nav { background: var(--azure); padding: 0 2rem; height: 56px; display: flex; align-items: center; justify-content: space-between; }
+  .nav-logo { font-family: var(--serif); color: var(--white); font-size: 20px; }
+  .nav-logo span { color: var(--teal); }
+  .nav-links { display: flex; gap: 1.5rem; align-items: center; }
+  .nav-link { font-size: 13px; color: rgba(255,255,255,0.65); }
+  .nav-cta { background: var(--teal); color: var(--azure); font-size: 12px; font-weight: 600; padding: 7px 16px; border-radius: 20px; }
+
+  .hero { background: var(--azure); padding: 4rem 2rem 3rem; text-align: center; }
+  .hero-eyebrow { font-size: 11px; font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase; color: var(--teal); margin-bottom: 1rem; }
+  .hero-h1 { font-family: var(--serif); font-size: 42px; color: var(--white); line-height: 1.1; margin-bottom: 1.25rem; max-width: 520px; margin-left: auto; margin-right: auto; }
+  .hero-h1 em { color: var(--teal); font-style: italic; }
+  .hero-sub { font-size: 15px; color: rgba(255,255,255,0.65); max-width: 400px; margin: 0 auto 2rem; line-height: 1.6; font-weight: 300; }
+  .hero-stat { display: inline-block; background: rgba(63,193,165,0.12); border: 1px solid rgba(63,193,165,0.3); border-radius: 8px; padding: 10px 20px; font-size: 13px; color: rgba(255,255,255,0.8); margin-bottom: 2rem; font-style: italic; }
+  .hero-stat strong { color: var(--teal); font-style: normal; }
+  .hero-search { background: var(--white); border-radius: 12px; padding: 4px 4px 4px 16px; display: flex; align-items: center; gap: 8px; max-width: 460px; margin: 2rem auto 0; }
+  .hero-search input { border: none; outline: none; font-size: 14px; color: var(--ink); flex: 1; font-family: var(--sans); background: transparent; }
+  .hero-search-btn { background: var(--azure); color: var(--white); font-size: 13px; font-weight: 500; padding: 10px 20px; border-radius: 8px; white-space: nowrap; }
+
+  .section { padding: 2.5rem 2rem; }
+  .section-title { font-family: var(--serif); font-size: 26px; color: var(--ink); margin-bottom: 0.25rem; }
+  .section-sub { font-size: 13px; color: var(--ink-light); margin-bottom: 1.5rem; }
+  .cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; }
+
+  .company-card { background: var(--white); border: 1px solid var(--warm-mid); border-radius: 12px; padding: 1.25rem; }
+  .card-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 12px; }
+  .company-logo { width: 40px; height: 40px; border-radius: 8px; background: var(--azure); display: flex; align-items: center; justify-content: center; font-family: var(--serif); color: var(--white); font-size: 14px; }
+  .verified-badge { background: var(--teal-pale); color: #0a7a63; font-size: 10px; font-weight: 600; padding: 3px 8px; border-radius: 20px; }
+  .unverified-badge { background: var(--low-pale); color: var(--low); font-size: 10px; font-weight: 500; padding: 3px 8px; border-radius: 20px; }
+  .company-name { font-size: 15px; font-weight: 600; color: var(--ink); margin-bottom: 2px; }
+  .company-meta { font-size: 12px; color: var(--ink-light); margin-bottom: 12px; }
+
+  .trust-score-mini { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+  .score-ring { width: 44px; height: 44px; flex-shrink: 0; }
+  .score-ring svg { width: 44px; height: 44px; }
+
+  .recommend-row { background: var(--teal-pale); border-radius: 6px; padding: 6px 10px; font-size: 11px; color: #0a7a63; font-weight: 500; }
+  .recommend-row-low { background: var(--low-pale); border-radius: 6px; padding: 6px 10px; font-size: 11px; color: var(--low); font-weight: 500; }
+
+  .profile-header { background: var(--azure); padding: 2rem 2rem 0; }
+  .profile-top { display: flex; align-items: flex-start; gap: 1rem; margin-bottom: 1.5rem; }
+  .profile-logo { width: 64px; height: 64px; border-radius: 12px; background: var(--white); display: flex; align-items: center; justify-content: center; font-family: var(--serif); color: var(--azure); font-size: 22px; flex-shrink: 0; }
+  .profile-name { font-family: var(--serif); font-size: 28px; color: var(--white); margin-bottom: 4px; }
+  .profile-meta { font-size: 13px; color: rgba(255,255,255,0.6); margin-bottom: 10px; }
+  .badge-row { display: flex; gap: 8px; flex-wrap: wrap; }
+  .badge-verified { background: var(--teal); color: var(--azure); font-size: 11px; font-weight: 600; padding: 4px 12px; border-radius: 20px; }
+  .badge-recommended { background: rgba(232,74,126,0.18); color: #e84a7e; font-size: 11px; font-weight: 500; padding: 4px 12px; border-radius: 20px; }
+  .profile-tabs { display: flex; gap: 0; border-top: 1px solid rgba(255,255,255,0.1); margin-top: 1rem; }
+  .tab { font-size: 13px; padding: 12px 20px; color: rgba(255,255,255,0.5); border-bottom: 2px solid transparent; }
+  .tab.active { color: var(--teal); border-bottom-color: var(--teal); }
+
+  .score-section { padding: 2rem; background: var(--warm); display: flex; gap: 1.5rem; flex-wrap: wrap; }
+  .score-main { background: var(--white); border-radius: 16px; padding: 1.5rem; flex: 0 0 200px; text-align: center; border: 1px solid var(--warm-mid); }
+  .big-score-label { font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-light); margin-bottom: 1rem; }
+  .big-ring { margin: 0 auto 1rem; width: 100px; height: 100px; }
+  .big-ring svg { width: 100px; height: 100px; }
+  .big-score-sub { font-size: 12px; color: var(--ink-light); margin-top: 4px; }
+  .recommend-pct { margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--warm-mid); font-size: 22px; font-weight: 600; color: var(--crimson); }
+  .recommend-pct-label { font-size: 11px; color: var(--ink-light); font-weight: 400; }
+
+  .pillars { flex: 1; display: flex; flex-direction: column; gap: 10px; min-width: 220px; }
+  .pillar-card { background: var(--white); border-radius: 12px; padding: 14px 16px; border: 1px solid var(--warm-mid); display: flex; align-items: center; gap: 14px; }
+  .pillar-bar-wrap { flex: 1; }
+  .pillar-name { font-size: 12px; font-weight: 500; color: var(--ink); margin-bottom: 6px; }
+  .pillar-bar-bg { height: 6px; background: var(--warm-mid); border-radius: 3px; overflow: hidden; }
+  .pillar-bar-fill { height: 100%; border-radius: 3px; }
+  .pillar-score-val { font-size: 16px; font-weight: 600; color: var(--ink); min-width: 28px; text-align: right; }
+  .pillar-score-val-low { font-size: 16px; font-weight: 600; color: var(--low); min-width: 28px; text-align: right; }
+
+  .reviews-section { padding: 0 2rem 2rem; background: var(--warm); }
+  .review-card { background: var(--white); border-radius: 12px; padding: 1.25rem; border: 1px solid var(--warm-mid); margin-bottom: 10px; }
+  .review-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+  .reviewer-info { display: flex; align-items: center; gap: 10px; }
+  .reviewer-avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--teal-pale); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; color: #0a7a63; }
+  .reviewer-name { font-size: 13px; font-weight: 500; color: var(--ink); }
+  .reviewer-meta { font-size: 11px; color: var(--ink-light); }
+  .review-verified { font-size: 10px; color: #0a7a63; background: var(--teal-pale); padding: 2px 8px; border-radius: 20px; font-weight: 500; }
+  .review-quote { font-size: 14px; color: var(--ink-mid); line-height: 1.6; margin-bottom: 10px; font-style: italic; }
+  .review-recommend { font-size: 12px; color: var(--crimson); font-weight: 500; display: flex; align-items: center; gap: 6px; }
+  .review-recommend-neutral { font-size: 12px; color: var(--ink-light); font-weight: 500; display: flex; align-items: center; gap: 6px; }
+
+  .form-header { background: var(--azure); padding: 1.5rem 2rem; }
+  .form-title { font-family: var(--serif); font-size: 22px; color: var(--white); margin-bottom: 4px; }
+  .form-sub { font-size: 13px; color: rgba(255,255,255,0.6); }
+  .form-progress { height: 3px; background: rgba(255,255,255,0.1); margin-top: 1.5rem; }
+  .form-progress-fill { height: 100%; background: var(--teal); width: 33%; }
+  .form-body { padding: 1.75rem 2rem; }
+  .form-q-num { font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--teal); margin-bottom: 6px; }
+  .form-q-text { font-size: 16px; font-weight: 500; color: var(--ink); margin-bottom: 1.25rem; line-height: 1.4; }
+  .options-grid { display: flex; flex-direction: column; gap: 8px; }
+  .option-btn { background: var(--white); border: 1px solid var(--warm-mid); border-radius: 10px; padding: 12px 16px; font-size: 14px; color: var(--ink); text-align: left; }
+  .option-btn.selected { border-color: var(--teal); background: var(--teal-pale); color: #0a7a63; font-weight: 500; }
+  .form-nav { display: flex; justify-content: space-between; align-items: center; padding: 1rem 2rem 1.5rem; border-top: 1px solid var(--warm-mid); }
+  .btn-back { font-size: 13px; color: var(--ink-light); }
+  .btn-next { background: var(--teal); color: var(--azure); font-size: 14px; font-weight: 600; padding: 10px 24px; border-radius: 20px; }
+
+  .dash-header { background: var(--azure); padding: 1.25rem 1.5rem; display: flex; align-items: center; justify-content: space-between; }
+  .dash-title { font-size: 15px; font-weight: 500; color: var(--white); }
+  .dash-meta { font-size: 12px; color: rgba(255,255,255,0.5); }
+  .dash-body { padding: 1.25rem 1.5rem; background: var(--warm); }
+  .metrics-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 1.25rem; }
+  .metric-card { background: var(--white); border-radius: 10px; padding: 14px; border: 1px solid var(--warm-mid); text-align: center; }
+  .metric-val { font-size: 24px; font-weight: 600; color: var(--ink); line-height: 1; margin-bottom: 4px; }
+  .metric-val.teal { color: var(--teal); }
+  .metric-val.heart { color: var(--crimson); }
+  .metric-label { font-size: 11px; color: var(--ink-light); }
+  .dash-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .dash-card { background: var(--white); border-radius: 10px; padding: 1rem; border: 1px solid var(--warm-mid); }
+  .dash-card-title { font-size: 12px; font-weight: 600; color: var(--ink-light); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 12px; }
+  .dash-review-item { padding: 10px 0; border-bottom: 1px solid var(--warm-mid); }
+  .dash-review-item:last-child { border-bottom: none; }
+  .dash-review-q { font-size: 12px; color: var(--ink-light); margin-bottom: 4px; }
+  .dash-review-val { font-size: 14px; font-weight: 500; color: var(--ink); display: flex; align-items: center; gap: 8px; }
+  .dash-bar { flex: 1; height: 5px; background: var(--warm-mid); border-radius: 3px; overflow: hidden; }
+  .dash-bar-fill { height: 100%; background: var(--teal); border-radius: 3px; }
+  .dash-bar-fill-low { height: 100%; background: var(--low); border-radius: 3px; }
+  .pending-review { background: var(--warm); border-radius: 8px; padding: 10px 12px; margin-bottom: 8px; }
+  .pending-text { font-size: 13px; color: var(--ink); margin-bottom: 6px; font-style: italic; }
+  .pending-actions { display: flex; gap: 8px; }
+  .btn-approve { font-size: 11px; color: #0a7a63; font-weight: 500; }
+  .btn-flag { font-size: 11px; color: var(--low); font-weight: 500; }
+  .divider-label { text-align: center; font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-light); margin: 1rem 0 0.5rem; display: flex; align-items: center; gap: 10px; }
+  .divider-label::before, .divider-label::after { content: ''; flex: 1; height: 1px; background: var(--warm-mid); }
+</style>
+</head>
+<body>
+
+  <div class="page-label">Page 1 — Landing page</div>
+  <div class="screen">
+    <div class="nav">
+      <div class="nav-logo">cope<span>epl</span></div>
+      <div class="nav-links">
+        <span class="nav-link">Find companies</span>
+        <span class="nav-link">For employers</span>
+        <span class="nav-link">How it works</span>
+        <span class="nav-cta">For employers</span>
+      </div>
+    </div>
+    <div class="hero">
+      <div class="hero-eyebrow">Family-proven workplaces</div>
+      <h1 class="hero-h1">Find companies that <em>actually</em> support family life</h1>
+      <p class="hero-sub">Verified by parents and carers who work there — not by HR departments.</p>
+      <div class="hero-stat"><strong>4 in 6</strong> mothers in our founder's maternity group left their jobs. We're changing that.</div>
+      <div class="hero-search">
+        <input type="text" placeholder="Search companies, industries or roles..." />
+        <span class="hero-search-btn">Search</span>
+      </div>
+    </div>
+    <div class="section" style="background:var(--warm)">
+      <div class="section-title">Verified family-friendly employers</div>
+      <div class="section-sub">Scored by parents and carers — not marketing teams</div>
+      <div class="cards-grid">
+        <div class="company-card">
+          <div class="card-top">
+            <div class="company-logo">Sp</div>
+            <span class="verified-badge">✓ Verified</span>
+          </div>
+          <div class="company-name">Spotify</div>
+          <div class="company-meta">Technology · 5,000+ employees</div>
+          <div class="trust-score-mini">
+            <div class="score-ring">
+              <svg viewBox="0 0 44 44">
+                <circle cx="22" cy="22" r="18" fill="none" stroke="#eee9e2" stroke-width="4"/>
+                <circle cx="22" cy="22" r="18" fill="none" stroke="#3fc1a5" stroke-width="4" stroke-dasharray="94 113" stroke-dashoffset="28" stroke-linecap="round"/>
+                <text x="22" y="27" text-anchor="middle" font-size="12" font-weight="600" fill="#192a37">4.2</text>
+              </svg>
+            </div>
+            <div>
+              <div style="font-size:13px;font-weight:600;color:var(--ink)">Family Trust Score</div>
+              <div style="font-size:11px;color:var(--ink-light)">47 verified reviews</div>
+            </div>
+          </div>
+          <div class="recommend-row">♥ 92% would recommend to a parent</div>
+        </div>
+        <div class="company-card">
+          <div class="card-top">
+            <div class="company-logo" style="background:#2e5068">Sh</div>
+            <span class="verified-badge">✓ Verified</span>
+          </div>
+          <div class="company-name">Shopify</div>
+          <div class="company-meta">E-commerce · 10,000+ employees</div>
+          <div class="trust-score-mini">
+            <div class="score-ring">
+              <svg viewBox="0 0 44 44">
+                <circle cx="22" cy="22" r="18" fill="none" stroke="#eee9e2" stroke-width="4"/>
+                <circle cx="22" cy="22" r="18" fill="none" stroke="#3fc1a5" stroke-width="4" stroke-dasharray="102 113" stroke-dashoffset="28" stroke-linecap="round"/>
+                <text x="22" y="27" text-anchor="middle" font-size="12" font-weight="600" fill="#192a37">4.5</text>
+              </svg>
+            </div>
+            <div>
+              <div style="font-size:13px;font-weight:600;color:var(--ink)">Family Trust Score</div>
+              <div style="font-size:11px;color:var(--ink-light)">31 verified reviews</div>
+            </div>
+          </div>
+          <div class="recommend-row">♥ 96% would recommend to a parent</div>
+        </div>
+        <div class="company-card">
+          <div class="card-top">
+            <div class="company-logo" style="background:#4a6070">Mo</div>
+            <span class="unverified-badge">Unverified</span>
+          </div>
+          <div class="company-name">Monzo</div>
+          <div class="company-meta">Fintech · 2,000+ employees</div>
+          <div class="trust-score-mini">
+            <div class="score-ring">
+              <svg viewBox="0 0 44 44">
+                <circle cx="22" cy="22" r="18" fill="none" stroke="#eee9e2" stroke-width="4"/>
+                <circle cx="22" cy="22" r="18" fill="none" stroke="#7a95a6" stroke-width="4" stroke-dasharray="72 113" stroke-dashoffset="28" stroke-linecap="round"/>
+                <text x="22" y="27" text-anchor="middle" font-size="12" font-weight="600" fill="#7a95a6">3.2</text>
+              </svg>
+            </div>
+            <div>
+              <div style="font-size:13px;font-weight:600;color:var(--ink-light)">Family Trust Score</div>
+              <div style="font-size:11px;color:var(--ink-light)">18 verified reviews</div>
+            </div>
+          </div>
+          <div class="recommend-row-low">61% would recommend to a parent</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-label">Page 2 — Company profile</div>
+  <div class="screen">
+    <div class="nav">
+      <div class="nav-logo">cope<span>epl</span></div>
+      <div class="nav-links">
+        <span class="nav-link">Find companies</span>
+        <span class="nav-link">For employers</span>
+        <span class="nav-cta">Leave a review</span>
+      </div>
+    </div>
+    <div class="profile-header">
+      <div class="profile-top">
+        <div class="profile-logo">Sp</div>
+        <div>
+          <div class="profile-name">Spotify</div>
+          <div class="profile-meta">Technology · London, UK · 5,000–10,000 employees</div>
+          <div class="badge-row">
+            <span class="badge-verified">✓ Verified Employer</span>
+            <span class="badge-recommended">♥ Parent Recommended</span>
+          </div>
+        </div>
+      </div>
+      <div class="profile-tabs">
+        <span class="tab active">Overview</span>
+        <span class="tab">Reviews (47)</span>
+        <span class="tab">Jobs (3)</span>
+        <span class="tab">Assessment</span>
+      </div>
+    </div>
+    <div class="score-section">
+      <div class="score-main">
+        <div class="big-score-label">Family Trust Score</div>
+        <div class="big-ring">
+          <svg viewBox="0 0 100 100">
+            <circle cx="50" cy="50" r="40" fill="none" stroke="#eee9e2" stroke-width="8"/>
+            <circle cx="50" cy="50" r="40" fill="none" stroke="#3fc1a5" stroke-width="8" stroke-dasharray="209 251" stroke-dashoffset="63" stroke-linecap="round"/>
+            <text x="50" y="44" text-anchor="middle" font-size="26" font-weight="600" fill="#192a37" font-family="DM Serif Display,serif">4.2</text>
+            <text x="50" y="60" text-anchor="middle" font-size="11" fill="#7a95a6">out of 5</text>
+          </svg>
+        </div>
+        <div class="big-score-sub">Based on 47 verified reviews</div>
+        <div class="recommend-pct">92%<br><span class="recommend-pct-label">♥ would recommend to a parent</span></div>
+      </div>
+      <div class="pillars">
+        <div style="font-size:13px;font-weight:500;color:var(--ink-light);margin-bottom:4px">Score breakdown</div>
+        <div class="pillar-card">
+          <div class="pillar-bar-wrap">
+            <div class="pillar-name">Policy</div>
+            <div class="pillar-bar-bg"><div class="pillar-bar-fill" style="width:82%;background:var(--teal)"></div></div>
+          </div>
+          <div class="pillar-score-val">4.1</div>
+        </div>
+        <div class="pillar-card">
+          <div class="pillar-bar-wrap">
+            <div class="pillar-name">Day-to-day reality</div>
+            <div class="pillar-bar-bg"><div class="pillar-bar-fill" style="width:86%;background:var(--teal)"></div></div>
+          </div>
+          <div class="pillar-score-val">4.3</div>
+        </div>
+        <div class="pillar-card">
+          <div class="pillar-bar-wrap">
+            <div class="pillar-name">Return from leave</div>
+            <div class="pillar-bar-bg"><div class="pillar-bar-fill" style="width:80%;background:var(--teal)"></div></div>
+          </div>
+          <div class="pillar-score-val">4.0</div>
+        </div>
+        <div class="pillar-card">
+          <div class="pillar-bar-wrap">
+            <div class="pillar-name">Career progression</div>
+            <div class="pillar-bar-bg"><div class="pillar-bar-fill" style="width:74%;background:var(--low)"></div></div>
+          </div>
+          <div class="pillar-score-val-low">3.7</div>
+        </div>
+      </div>
+    </div>
+    <div class="reviews-section">
+      <div class="divider-label">What parents say</div>
+      <div class="review-card">
+        <div class="review-top">
+          <div class="reviewer-info">
+            <div class="reviewer-avatar">SC</div>
+            <div>
+              <div class="reviewer-name">Sarah C.</div>
+              <div class="reviewer-meta">Current employee · Parent</div>
+            </div>
+          </div>
+          <span class="review-verified">✓ LinkedIn verified</span>
+        </div>
+        <div class="review-quote">"Flexible working is genuinely normalised here — my manager uses it too. Came back from mat leave to my same role and team. Only watch-out is promotions can take longer if you're part-time."</div>
+        <div class="review-recommend">♥ Would absolutely recommend to a friend on mat leave</div>
+      </div>
+      <div class="review-card">
+        <div class="review-top">
+          <div class="reviewer-info">
+            <div class="reviewer-avatar" style="background:var(--low-pale);color:var(--low)">JM</div>
+            <div>
+              <div class="reviewer-name">Jamie M.</div>
+              <div class="reviewer-meta">Former employee · Carer</div>
+            </div>
+          </div>
+          <span class="review-verified">✓ LinkedIn verified</span>
+        </div>
+        <div class="review-quote">"Team was supportive but it really depended on your manager. Mine was great — but I saw colleagues struggle with less understanding line managers. Inconsistent across departments."</div>
+        <div class="review-recommend-neutral">♥ Would probably recommend to a friend</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-label">Page 3 — Leave a review</div>
+  <div class="screen">
+    <div class="form-header">
+      <div style="font-size:12px;color:rgba(255,255,255,0.5);margin-bottom:6px">Reviewing</div>
+      <div class="form-title">Spotify</div>
+      <div class="form-sub">Your review helps other parents make better decisions. Takes under 2 minutes.</div>
+      <div class="form-progress"><div class="form-progress-fill"></div></div>
+    </div>
+    <div class="form-body">
+      <div class="form-q-num">Question 3 of 9</div>
+      <div class="form-q-text">How does the company's actual support for parents and carers compare to what you expected when you joined?</div>
+      <div class="options-grid">
+        <div class="option-btn selected">Much better than I expected</div>
+        <div class="option-btn">About what I expected</div>
+        <div class="option-btn">Worse than I expected</div>
+        <div class="option-btn">Much worse than I expected</div>
+      </div>
+    </div>
+    <div class="form-nav">
+      <span class="btn-back">← Back</span>
+      <span class="btn-next">Continue →</span>
+    </div>
+  </div>
+
+  <div class="page-label">Page 4 — Employer dashboard</div>
+  <div class="screen">
+    <div class="dash-header">
+      <div>
+        <div class="dash-title">Spotify — Employer dashboard</div>
+        <div class="dash-meta">Verified Employer · Subscription active</div>
+      </div>
+      <span class="badge-verified">✓ Verified</span>
+    </div>
+    <div class="dash-body">
+      <div class="metrics-row">
+        <div class="metric-card">
+          <div class="metric-val teal">4.2</div>
+          <div class="metric-label">Family Trust Score</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-val">47</div>
+          <div class="metric-label">Total reviews</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-val heart">92%</div>
+          <div class="metric-label">♥ Would recommend</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-val">284</div>
+          <div class="metric-label">Profile views this month</div>
+        </div>
+      </div>
+      <div class="dash-cols">
+        <div class="dash-card">
+          <div class="dash-card-title">Score breakdown</div>
+          <div class="dash-review-item">
+            <div class="dash-review-q">Policy</div>
+            <div class="dash-review-val">4.1 <div class="dash-bar"><div class="dash-bar-fill" style="width:82%"></div></div></div>
+          </div>
+          <div class="dash-review-item">
+            <div class="dash-review-q">Day-to-day reality</div>
+            <div class="dash-review-val">4.3 <div class="dash-bar"><div class="dash-bar-fill" style="width:86%"></div></div></div>
+          </div>
+          <div class="dash-review-item">
+            <div class="dash-review-q">Return from leave</div>
+            <div class="dash-review-val">4.0 <div class="dash-bar"><div class="dash-bar-fill" style="width:80%"></div></div></div>
+          </div>
+          <div class="dash-review-item">
+            <div class="dash-review-q">Career progression</div>
+            <div class="dash-review-val" style="color:var(--low)">3.7 <div class="dash-bar"><div class="dash-bar-fill-low" style="width:74%"></div></div></div>
+          </div>
+        </div>
+        <div class="dash-card">
+          <div class="dash-card-title">Reviews awaiting moderation</div>
+          <div class="pending-review">
+            <div class="pending-text">"Flexible working policy is real here — I pick up kids every day at 3pm and nobody bats an eyelid."</div>
+            <div class="pending-actions">
+              <span class="btn-approve">✓ Approve</span>
+              <span class="btn-flag">⚑ Flag for review</span>
+            </div>
+          </div>
+          <div class="pending-review">
+            <div class="pending-text">"Manager was supportive but return from mat leave was poorly handled — no proper handover or catch-up."</div>
+            <div class="pending-actions">
+              <span class="btn-approve">✓ Approve</span>
+              <span class="btn-flag">⚑ Flag for review</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>
