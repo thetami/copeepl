@@ -1,10 +1,5 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { createClient } from "@/lib/supabase/client";
-import { getInitials } from "@/lib/initials";
 import {
   BookmarkIcon,
   ChevronDownIcon,
@@ -15,6 +10,11 @@ import {
   UserIcon,
   XIcon,
 } from "@/components/icons";
+import { getInitials } from "@/lib/initials";
+import { createClient } from "@/lib/supabase/client";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 
 interface NavLink {
   label: string;
@@ -50,10 +50,12 @@ function useNavUser(): NavUser | null {
       setUser(email ? { email, initials: getInitials(email) } : null);
     });
 
-    const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
-      const email = session?.user?.email;
-      setUser(email ? { email, initials: getInitials(email) } : null);
-    });
+    const { data: listener } = supabase.auth.onAuthStateChange(
+      (_event, session) => {
+        const email = session?.user?.email;
+        setUser(email ? { email, initials: getInitials(email) } : null);
+      },
+    );
 
     return () => listener.subscription.unsubscribe();
   }, []);
@@ -89,15 +91,24 @@ export function Navbar() {
         }`}
       >
         {isEmployerMode ? (
-          <Link href="/companies" className="text-[13px] text-white/80 hover:text-white">
+          <Link
+            href="/companies"
+            className="text-[13px] font-semibold text-teal"
+          >
             ← Back to Copeepl
           </Link>
         ) : (
           <div className="flex items-center gap-5">
-            <Link href="/employers" className="text-[13px] font-semibold text-teal">
+            <Link
+              href="/employers"
+              className="text-[13px] font-semibold text-teal"
+            >
               For employers →
             </Link>
-            <Link href="/help" className="text-[13px] text-white/60 hover:text-white/80">
+            <Link
+              href="/help"
+              className="text-[13px] text-white/60 hover:text-white/80"
+            >
               Help
             </Link>
           </div>
@@ -105,9 +116,19 @@ export function Navbar() {
       </div>
 
       <div className="flex h-[59px] items-center justify-between bg-azure px-8">
-        <Link href="/companies" className="shrink-0 font-serif text-xl text-white">
-          cope<span className="text-teal">epl</span>
-        </Link>
+        <div className="flex items-center">
+          <Link
+            href="/companies"
+            className="shrink-0 font-serif text-xl text-white"
+          >
+            co<span className="text-teal">peepl</span>
+          </Link>
+          {isEmployerMode ? (
+            <span className="text-[13px] text-crimson ml-1 mt-3 italic">
+              for employers
+            </span>
+          ) : null}
+        </div>
 
         <nav className="hidden items-center gap-6 md:flex">
           {navLinks.map((link) => (
@@ -115,7 +136,9 @@ export function Navbar() {
               key={link.href}
               href={link.href}
               className={`text-[13px] transition-colors ${
-                isActive(pathname, link.href) ? "text-white" : "text-white/65 hover:text-white"
+                isActive(pathname, link.href)
+                  ? "text-white"
+                  : "text-white/65 hover:text-white"
               }`}
             >
               {link.label}
@@ -142,7 +165,10 @@ export function Navbar() {
             />
           ) : (
             <>
-              <Link href="/login" className="text-[13px] text-white/70 hover:text-white">
+              <Link
+                href="/login"
+                className="text-[13px] text-white/70 hover:text-white"
+              >
                 Sign in
               </Link>
               <Link
@@ -184,7 +210,9 @@ export function Navbar() {
         />
       )}
 
-      {showBottomTabBar && <BottomTabBar pathname={pathname} reviewHref={reviewHref} />}
+      {showBottomTabBar && (
+        <BottomTabBar pathname={pathname} reviewHref={reviewHref} />
+      )}
     </>
   );
 }
@@ -210,7 +238,11 @@ function AccountMenu({
 
   return (
     <div className="relative">
-      <button type="button" onClick={onToggle} className="flex items-center gap-1.5">
+      <button
+        type="button"
+        onClick={onToggle}
+        className="flex items-center gap-1.5"
+      >
         <span
           className={`flex h-9 w-9 items-center justify-center rounded-full text-xs font-semibold ${
             isEmployerMode ? "bg-crimson text-white" : "bg-teal text-azure"
@@ -218,14 +250,18 @@ function AccountMenu({
         >
           {user.initials}
         </span>
-        <ChevronDownIcon className={`h-4 w-4 text-white/70 transition-transform ${open ? "rotate-180" : ""}`} />
+        <ChevronDownIcon
+          className={`h-4 w-4 text-white/70 transition-transform ${open ? "rotate-180" : ""}`}
+        />
       </button>
 
       {open && (
         <>
           <div className="fixed inset-0 z-40" onClick={onClose} />
           <div className="absolute right-0 top-full z-50 mt-2 w-52 rounded-lg border border-warm-mid bg-white p-2">
-            <p className="truncate px-2 py-1.5 text-xs text-ink-light">{user.email}</p>
+            <p className="truncate px-2 py-1.5 text-xs text-ink-light">
+              {user.email}
+            </p>
             <Link
               href="/account"
               onClick={onClose}
@@ -264,9 +300,14 @@ function MobileDrawer({
     <div className="fixed inset-0 z-50 flex flex-col bg-azure md:hidden">
       <div className="flex h-[59px] items-center justify-between px-8">
         <span className="font-serif text-xl text-white">
-          cope<span className="text-teal">epl</span>
+          co<span className="text-teal">peepl</span>
         </span>
-        <button type="button" aria-label="Close menu" onClick={onClose} className="text-white">
+        <button
+          type="button"
+          aria-label="Close menu"
+          onClick={onClose}
+          className="text-white"
+        >
           <XIcon />
         </button>
       </div>
@@ -313,7 +354,9 @@ function MobileDrawer({
         <div className="mt-4 flex flex-col gap-2">
           {user ? (
             <>
-              <p className="mb-1 truncate text-center text-xs text-white/50">{user.email}</p>
+              <p className="mb-1 truncate text-center text-xs text-white/50">
+                {user.email}
+              </p>
               <Link
                 href="/account"
                 onClick={onClose}
@@ -346,7 +389,13 @@ function MobileDrawer({
   );
 }
 
-function BottomTabBar({ pathname, reviewHref }: { pathname: string; reviewHref: string }) {
+function BottomTabBar({
+  pathname,
+  reviewHref,
+}: {
+  pathname: string;
+  reviewHref: string;
+}) {
   const leftTabs = [
     { label: "Find", href: "/companies", Icon: SearchIcon },
     { label: "Saved", href: "/saved", Icon: BookmarkIcon },
@@ -359,7 +408,11 @@ function BottomTabBar({ pathname, reviewHref }: { pathname: string; reviewHref: 
   return (
     <nav className="fixed inset-x-0 bottom-0 z-50 flex h-16 items-center justify-between border-t border-warm-mid bg-white px-2 md:hidden">
       {leftTabs.map((tab) => (
-        <TabLink key={tab.href} {...tab} active={isActive(pathname, tab.href)} />
+        <TabLink
+          key={tab.href}
+          {...tab}
+          active={isActive(pathname, tab.href)}
+        />
       ))}
 
       <Link
@@ -371,7 +424,11 @@ function BottomTabBar({ pathname, reviewHref }: { pathname: string; reviewHref: 
       </Link>
 
       {rightTabs.map((tab) => (
-        <TabLink key={tab.href} {...tab} active={isActive(pathname, tab.href)} />
+        <TabLink
+          key={tab.href}
+          {...tab}
+          active={isActive(pathname, tab.href)}
+        />
       ))}
     </nav>
   );

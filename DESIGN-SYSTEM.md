@@ -92,9 +92,18 @@ Assessment) with teal underline on active tab.
 ### 4. `<TrustScoreBreakdown />`
 
 Large TrustScoreRing + total review count + recommend percentage
-(crimson, the one "heart" stat) on the left. Four pillar bars on the
-right: Policy, Day-to-day reality, Return from leave, Career progression.
-Each pillar bar uses teal fill if score >= 3.5, low grey fill if below.
+(crimson, the one "heart" stat) on the left. Four bars on the right:
+Policy, Day-to-day reality, Return from leave, Career progression.
+Each bar uses teal fill if score >= 3.5, low grey fill if below.
+
+**Important — scoring vs. display are not 1:1.** Only THREE pillars are
+weighted in the Family Trust Score calculation: Policy (25%), Reality
+(45%), Return (30%). "Career progression" is NOT a fourth weighted
+pillar — it's Q6's average score surfaced as its own UI stat, pulled
+directly from the Reality pillar's underlying data, for transparency.
+Q6 still counts toward the Reality pillar average in the score calc.
+Do not add a fourth weight or you'll double-count Q6 and the maths
+won't reconcile against the documented 25/45/30 split.
 
 ### 5. `<ReviewCard />`
 
@@ -125,7 +134,7 @@ _(Context only — not scored)_
 
 **Q3. How does the company's actual support for parents and carers compare to what you expected when you joined?**
 Options: `Much better than I expected` / `About what I expected` / `Worse than I expected` / `Much worse than I expected`
-_(Feeds: Policy Score)_
+_(Feeds: Reality Score — measures lived experience against expectation, NOT company policy. Policy comes only from the Company Assessment, never the review form.)_
 
 **Q4. When family life clashed with work — a sick child, a school event, a care emergency — your experience was...**
 Options: `Always handled with understanding` / `Usually fine` / `Hit and miss` / `Rarely handled well` / `Never handled well`
@@ -141,7 +150,7 @@ _(Feeds: Reality Score — captures the "always-on" career penalty)_
 
 **Q7. The biggest barrier to being a parent or carer at this company was...**
 Options: `Manager attitudes` / `Unwritten cultural expectations` / `Workload and hours` / `Lack of flexible options` / `No significant barriers`
-*(Feeds: Reality Score — diagnostic, explains *why* a score is low)*
+_(Categorical/diagnostic only — NEVER averaged into any pillar score. Stored as biggest_barrier_enum, used solely for a "most reported barriers" breakdown chart on the company profile/dashboard.)_
 
 **Q8. Would you recommend this company to a close friend who is about to become a parent or has caring responsibilities?**
 Options: `Absolutely yes` / `Probably yes` / `Probably not` / `Definitely not`
@@ -228,6 +237,88 @@ Free text, optional, max 500 characters
 This form must be re-completed annually — surface a reminder in the
 employer dashboard when a company's assessment is 11+ months old, and
 mark the Verified badge as "renewal due" rather than removing it outright.
+
+## Score Calculation Formula
+
+**Storage model:** reviews store PRE-AGGREGATED per-review scores
+(computed by the review submission server action at write time), NOT
+raw per-question answers. This keeps the schema clean and avoids
+recomputing point-mappings on every read.
+
+### `reviews` table — scored columns
+
+| Column                 | Type                   | Computed from                                                                    |
+| ---------------------- | ---------------------- | -------------------------------------------------------------------------------- |
+| `reality_score`        | smallint 1-5           | avg(Q3_score, Q4_score, Q6_score)                                                |
+| `return_score`         | smallint 1-5, nullable | Q5_score; NULL if "Didn't take leave"                                            |
+| `progression_score`    | smallint 1-5, nullable | Q6_score alone — isolated for the UI display stat, NOT re-averaged into anything |
+| `biggest_barrier_enum` | enum                   | Q7 raw value — categorical, never scored/averaged                                |
+
+There is no `policy_score` on `reviews` — Policy comes only from
+`company_assessment`.
+
+### Review question → point mapping (computed at submission time)
+
+| Q                                                                         | Options → Score                                                                                                                                   |
+| ------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Q3 expectation gap                                                        | Much worse=1 · Worse=2.33 · About expected=3.67 · Much better=5                                                                                   |
+| Q4 emergency handling                                                     | Never=1 · Rarely=2 · Hit and miss=3 · Usually=4 · Always=5                                                                                        |
+| Q5 return protection                                                      | Sig. reduced=1 · Subtly reduced=2.33 · Mostly unchanged=3.67 · Fully protected=5 · Didn't take leave=NULL (excluded from denominator, not zeroed) |
+| Q6 progression penalty (reverse-scored — "not at all" is the good answer) | Significantly=1 · Noticeably=2.33 · Slightly=3.67 · Not at all=5                                                                                  |
+
+### Company assessment question → point mapping (`policy_pillar` input)
+
+Average of Q1–Q11 (Q12 is free text, unscored). Q6 is itself an average
+of its three sub-parts before folding into the Q1-11 average.
+
+| Q                         | Options → Score                                                                                   |
+| ------------------------- | ------------------------------------------------------------------------------------------------- |
+| Q1 maternity pay          | Statutory=1 · 4wk full=2 · 12wk full=3 · 26wk full=4 · Full pay=5                                 |
+| Q2 paternity/partner      | Statutory=1 · 2wk=2.33 · 4wk=3.67 · More than 4wk=5                                               |
+| Q3 shared parental        | Statutory=1 · Partial=3 · Same as maternity=5                                                     |
+| Q4 flexible from          | After 1yr=1 · After 6mo=2.33 · After probation=3.67 · Day one=5                                   |
+| Q5 arrangements supported | (count selected / 7) × 4 + 1                                                                      |
+| Q6a workforce %           | <10%=1 · 10-25%=2.33 · 25-50%=3.67 · >50%=5 · Don't track=1                                       |
+| Q6b seniority spread      | Junior only=1 · Mid mgmt=2.33 · Senior mgmt=3.67 · All incl. leadership=5                         |
+| Q6c gender split          | Predominantly women=1 · Majority women=2.33 · Roughly equal=5 · Majority men=3.67 · Don't track=1 |
+| Q7 carer's policy         | No=1 · Internal only=3 · Publicly available=5                                                     |
+| Q8 emergency leave        | No=1 · Statutory min=3 · Yes=5                                                                    |
+| Q9 leader took leave      | No=1 · Prefer not to say=2 · N/A=2.5 · Yes=5                                                      |
+| Q10 pay/promo inclusion   | No formal process=1 · No=1 · Usually=3.67 · Always=5                                              |
+| Q11 return programme      | No=1 · Informal=3 · Formal=5                                                                      |
+
+_These are v1 heuristic weights — reasonable defaults, not final. Revisit once real review data shows which questions actually discriminate between good and bad employers._
+
+### Aggregation (company-level, computed by `calculate_company_score()`)
+
+```
+policy_pillar  = point-mapped average of latest company_assessment row  // 1-5
+reality_pillar = avg(reviews.reality_score) across published reviews    // 1-5
+return_pillar  = avg(reviews.return_score) across published reviews
+                 where NOT NULL                                          // 1-5
+
+family_trust_score = (policy_pillar * 0.25)
+                    + (reality_pillar * 0.45)
+                    + (return_pillar * 0.30)
+
+career_progression_stat = avg(reviews.progression_score)
+                           across published reviews
+would_recommend_percentage = % of Q8 answers = 'absolutely_yes'
+                              OR 'probably_yes'
+```
+
+- Minimum 5 published reviews required before `family_trust_score` is
+  shown publicly
+- `return_pillar` excludes NULL return_score rows from the denominator
+  entirely — never treated as 0
+- `career_progression_stat` is a read-only projection of
+  `reviews.progression_score` for UI display only (the bar in
+  `TrustScoreBreakdown`) — it is NOT a 4th weighted pillar and is never
+  fed back into `family_trust_score`
+- `biggest_barrier_enum` (Q7) is never averaged into anything — query
+  it separately as a grouped count for a "most reported barriers" chart
+- Recalculate on every review published + every new company_assessment
+  saved (trigger-based, real-time, not batched)
 
 ## Layout & Spacing Conventions
 
